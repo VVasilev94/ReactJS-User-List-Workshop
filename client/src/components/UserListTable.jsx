@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
 import * as userService from "../services/userService"
+import UserListItem from "./UserListItem"
 
-export default function UserListTable(props) {
+const UserListTable = () => {
     const [users, setUsers] = useState([])
-    
+
 
     useEffect(() => {
         userService.getAll()
         .then(result => setUsers(result))
+        .catch(err => console.log(err))
     }, [])
 
     return(
@@ -69,9 +71,21 @@ export default function UserListTable(props) {
             </tr>
           </thead>
           <tbody>
-           <UserListItem />
+           {users.map(user => (
+            <UserListItem 
+            key={user._id}
+            firstName={user.firstName}
+            lastName={user.lastName}
+            email={user.email}
+            phoneNumber={user.phoneNumber}
+            imageUrl={user.imageUrl}
+            createdAt={user.createdAt}
+           />
+        ))}
           </tbody>
         </table>
       </div>
     )
-}
+           }
+
+           export default UserListTable

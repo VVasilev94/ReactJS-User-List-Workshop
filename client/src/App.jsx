@@ -12,7 +12,7 @@ function App() {
    <main className="main">
     <UserList />
 
-    <button className="btn-add btn">Add new user</button>
+    
    </main>
 
    <Footer />

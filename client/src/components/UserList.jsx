@@ -1,13 +1,14 @@
 import Search from "./Search";
 import UserListTable from "./UserListTable";
 
-export default function UserList(props) {
-    return(
+const UserList = () => {
+    return (
         <section className="card users-container">
-<Search />
-
-<UserListTable />
-
+            <Search />
+            
+            <UserListTable />
         </section>
-    )
-}
+    );
+};
+
+export default UserList;
