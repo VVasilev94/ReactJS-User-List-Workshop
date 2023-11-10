@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
 import * as userService from "../services/userService"
 import UserListItem from "./UserListItem"
+import CreateUserModal from "./createUserModal"
 
 const UserListTable = () => {
     const [users, setUsers] = useState([])
+    const [showCreate, setShowCreate] = useState(false)
+    const [showInfo, setShowInfo] = useState(false)
 
 
     useEffect(() => {
@@ -12,8 +15,41 @@ const UserListTable = () => {
         .catch(err => console.log(err))
     }, [])
 
+    const createUserClickHandler = () => {
+      setShowCreate(true)
+    }
+
+    const hideCreateUserModal = () => {
+      setShowCreate(false)
+    }
+
+    const userCreateHandler = async (e) => {
+      e.preventDefault()
+     
+
+     const formData = new FormData(e.currentTarget)
+     const data = Object.fromEntries(formData)
+
+     const newUser = await userService.create(data)
+
+     setUsers(state => [...state, newUser])
+
+     setShowCreate(false)
+    }
+
+const userInfoClickHandler = (userId) => {
+  console.log(userId);
+}
     return(
+
         <div className="table-wrapper">
+           {showCreate && (
+           <CreateUserModal 
+           onClose={hideCreateUserModal}
+           onUserCreate={userCreateHandler}
+            />)}
+
+            {showInfo && <UserInfoModal onClose={() => setShowInfo(false)} />}
         
         <table className="table">
           <thead>
@@ -71,19 +107,27 @@ const UserListTable = () => {
             </tr>
           </thead>
           <tbody>
+
            {users.map(user => (
             <UserListItem 
             key={user._id}
+            userId={user._id}
             firstName={user.firstName}
             lastName={user.lastName}
             email={user.email}
             phoneNumber={user.phoneNumber}
             imageUrl={user.imageUrl}
             createdAt={user.createdAt}
+
+            onInfoClick={userInfoClickHandler}
            />
         ))}
           </tbody>
         </table>
+
+        <button className="btn-add btn" onClick={createUserClickHandler}>Add new user</button>
+
+       
       </div>
     )
            }
