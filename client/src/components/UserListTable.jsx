@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
 import * as userService from "../services/userService"
 import UserListItem from "./UserListItem"
-import CreateUserModal from "./createUserModal"
+import CreateUserModal from "./CreateUserModal"
 import UserInfoModal from "./UserInfoModal"
 import UserDeleteModal from "./UserDeleteModal"
+import Spinner from "./Spinner"
 
 const UserListTable = () => {
     const [users, setUsers] = useState([])
+    const [isLoading, setIsLoading] = useState(false);
     const [showCreate, setShowCreate] = useState(false)
     const [showInfo, setShowInfo] = useState(false)
     const [selectedUser, setSelectedUser] = useState(null)
@@ -14,10 +16,13 @@ const UserListTable = () => {
 
 
     useEffect(() => {
-        userService.getAll()
-        .then(result => setUsers(result))
-        .catch(err => console.log(err))
-    }, [])
+      setIsLoading(true);
+
+      userService.getAll()
+          .then(result => setUsers(result))
+          .catch(err => console.log(err))
+          .finally(() => setIsLoading(false));
+  }, []);
 
     const createUserClickHandler = () => {
       setShowCreate(true)
@@ -47,12 +52,14 @@ const userInfoClickHandler = async (userId) => {
 }
 
 const deleteUserClickHandler = (userId) => {
-setShowDelete(true)
 setSelectedUser(userId)
+setShowDelete(true)
 }
 
 const deleteUserHandler = async() => {
-  console.log('fsafas');
+  await userService.remove(selectedUser)
+  setUsers(state => state.filter(user => user._id !== selectedUser))
+  setShowDelete(false)
 }
 
     return(
@@ -67,6 +74,8 @@ const deleteUserHandler = async() => {
             {showInfo && (<UserInfoModal onClose={() => setShowInfo(false)} userId={selectedUser} />)}
 
             {showDelete && (<UserDeleteModal onClose={() => setShowDelete(false)} onDelete={deleteUserHandler} /> )}
+
+            {isLoading && <Spinner />}
         
         <table className="table">
           <thead>

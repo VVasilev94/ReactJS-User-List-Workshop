@@ -1,7 +1,7 @@
-const UserDeleteModal = (
+const UserDeleteModal = ({
     onClose,
     onDelete
-) => {
+}) => {
     return (
         <div className="overlay">
         <div className="backdrop" onClick={onClose}></div>
