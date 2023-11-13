@@ -2,11 +2,13 @@ import { useEffect, useState } from "react"
 import * as userService from "../services/userService"
 import UserListItem from "./UserListItem"
 import CreateUserModal from "./createUserModal"
+import UserInfoModal from "./UserInfoModal"
 
 const UserListTable = () => {
     const [users, setUsers] = useState([])
     const [showCreate, setShowCreate] = useState(false)
     const [showInfo, setShowInfo] = useState(false)
+    const [selectedUser, setSelectedUser] = useState(null)
 
 
     useEffect(() => {
@@ -37,8 +39,9 @@ const UserListTable = () => {
      setShowCreate(false)
     }
 
-const userInfoClickHandler = (userId) => {
-  console.log(userId);
+const userInfoClickHandler = async (userId) => {
+   setSelectedUser(userId)
+   setShowInfo(true)
 }
     return(
 
@@ -49,7 +52,7 @@ const userInfoClickHandler = (userId) => {
            onUserCreate={userCreateHandler}
             />)}
 
-            {showInfo && <UserInfoModal onClose={() => setShowInfo(false)} />}
+            {showInfo && <UserInfoModal onClose={() => setShowInfo(false)} userId={selectedUser} />}
         
         <table className="table">
           <thead>

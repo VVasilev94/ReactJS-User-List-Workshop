@@ -18,6 +18,7 @@ export const getOne = async (userId) => {
 
 export const create = async (data) => {
     const body = {
+        userId: data.userId,
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
