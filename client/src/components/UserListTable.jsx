@@ -3,12 +3,14 @@ import * as userService from "../services/userService"
 import UserListItem from "./UserListItem"
 import CreateUserModal from "./createUserModal"
 import UserInfoModal from "./UserInfoModal"
+import UserDeleteModal from "./UserDeleteModal"
 
 const UserListTable = () => {
     const [users, setUsers] = useState([])
     const [showCreate, setShowCreate] = useState(false)
     const [showInfo, setShowInfo] = useState(false)
     const [selectedUser, setSelectedUser] = useState(null)
+    const [showDelete, setShowDelete] = useState(false)
 
 
     useEffect(() => {
@@ -43,6 +45,16 @@ const userInfoClickHandler = async (userId) => {
    setSelectedUser(userId)
    setShowInfo(true)
 }
+
+const deleteUserClickHandler = (userId) => {
+setShowDelete(true)
+setSelectedUser(userId)
+}
+
+const deleteUserHandler = async() => {
+  console.log('fsafas');
+}
+
     return(
 
         <div className="table-wrapper">
@@ -52,7 +64,9 @@ const userInfoClickHandler = async (userId) => {
            onUserCreate={userCreateHandler}
             />)}
 
-            {showInfo && <UserInfoModal onClose={() => setShowInfo(false)} userId={selectedUser} />}
+            {showInfo && (<UserInfoModal onClose={() => setShowInfo(false)} userId={selectedUser} />)}
+
+            {showDelete && (<UserDeleteModal onClose={() => setShowDelete(false)} onDelete={deleteUserHandler} /> )}
         
         <table className="table">
           <thead>
@@ -123,6 +137,7 @@ const userInfoClickHandler = async (userId) => {
             createdAt={user.createdAt}
 
             onInfoClick={userInfoClickHandler}
+            onDeleteClick={deleteUserClickHandler}
            />
         ))}
           </tbody>
